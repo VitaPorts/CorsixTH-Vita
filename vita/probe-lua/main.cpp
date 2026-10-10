@@ -39,7 +39,7 @@ constexpr char kCppFile[] = "ux0:data/corsixth/m1b/cpp17-owned/cpp17-token.txt";
 constexpr char kNativeToken[] = "M1B-NATIVE-42\n";
 
 enum Test { CHECK_LUA_INIT, LUA_ABI, LPEG, LFS, NATIVE_IO, LUA_IO, CPP17_FS, LOGFILE, TEST_COUNT };
-enum State { NOT_RUN, PASS, FAIL };
+enum State { NOT_RUN, PASS, FAIL, OPTIONAL_UNSUPPORTED };
 const char* const kNames[] = {"LUAJIT INIT", "LUA 5.1 ABI", "LPEG PATTERN",
                             "LUAFILESYSTEM", "NATIVE UX0 I/O", "LUA UX0 I/O",
                             "CPP17 FILESYSTEM", "LOGFILE"};
@@ -64,7 +64,8 @@ void record(Test test, State state, const char* detail) {
   states[test] = state;
   char line[512];
   std::snprintf(line, sizeof(line), "test=%s result=%s detail=%.380s", kNames[test],
-                state == PASS ? "PASS" : state == FAIL ? "FAIL" : "NOT_RUN", detail);
+                 state == PASS ? "PASS" : state == FAIL ? "FAIL" :
+                 state == OPTIONAL_UNSUPPORTED ? "UNSUPPORTED_OPTIONAL" : "NOT_RUN", detail);
   log_line(state == FAIL ? "ERRORS" : "LUA", line);
 }
 
@@ -220,33 +221,68 @@ void test_lua(lua_State* lua) {
   }
 }
 
+void record_fs_unsupported(const char* operation, const std::error_code& error) {
+  char line[320];
+  std::snprintf(line, sizeof(line),
+                "operation=%s code=%d category=%s message=%.150s native_fallback=%s",
+                operation, error.value(), error.category().name(), error.message().c_str(),
+                states[NATIVE_IO] == PASS ? "PASS" : "FAIL");
+  record(CPP17_FS, OPTIONAL_UNSUPPORTED, line);
+}
+
 void cpp17_io() {
   namespace fs = std::filesystem;
   std::error_code error;
   const fs::path directory("ux0:data/corsixth/m1b/cpp17-owned");
   fs::create_directories(directory, error);
-  if (error || !fs::is_directory(directory, error)) {
-    char line[256];
-    std::snprintf(line, sizeof(line), "std::filesystem create/is_directory failed code=%d message=%.150s; native fallback tested separately",
-                  error.value(), error.message().c_str());
-    record(CPP17_FS, FAIL, line);
+  if (error) {
+    record_fs_unsupported("create_directories", error);
     return;
   }
+  const bool directory_exists = fs::is_directory(directory, error);
+  if (error) { record_fs_unsupported("is_directory", error); return; }
+  if (!directory_exists) { record(CPP17_FS, FAIL, "is_directory returned false without error"); return; }
   FILE* file = std::fopen(kCppFile, "wb");
   if (!file) { record_errno(CPP17_FS, "fopen cpp17 token"); return; }
   const char token[] = "M1B-CPP17-42\n";
   const bool wrote = std::fwrite(token, 1, sizeof(token) - 1, file) == sizeof(token) - 1;
   const int closed = std::fclose(file);
+  if (!wrote || closed != 0) {
+    record_errno(CPP17_FS, "fwrite/fclose cpp17 token");
+    std::remove(kCppFile);
+    return;
+  }
   const bool exists = fs::exists(kCppFile, error);
+  if (error) {
+    record_fs_unsupported("exists", error);
+    std::remove(kCppFile);
+    return;
+  }
   const auto size = fs::file_size(kCppFile, error);
+  if (error) {
+    record_fs_unsupported("file_size", error);
+    std::remove(kCppFile);
+    return;
+  }
   const int removed = std::remove(kCppFile);
-  fs::remove(directory, error);
-  if (wrote && closed == 0 && exists && size == sizeof(token) - 1 && removed == 0 && !error) {
+  const int remove_errno = errno;
+  if (removed != 0) {
+    char line[160];
+    std::snprintf(line, sizeof(line), "optional token cleanup failed remove=%d errno=%d (%s)",
+                  removed, remove_errno, std::strerror(remove_errno));
+    record(CPP17_FS, FAIL, line);
+    return;
+  }
+  const bool directory_removed = fs::remove(directory, error);
+  if (error) { record_fs_unsupported("remove_directory", error); return; }
+  if (exists && size == sizeof(token) - 1 && directory_removed) {
     record(CPP17_FS, PASS, "std::filesystem create/is_directory/exists/file_size/remove verified");
   } else {
     char line[180];
-    std::snprintf(line, sizeof(line), "std::filesystem runtime mismatch exists=%d size=%u remove=%d code=%d",
-                  exists, static_cast<unsigned>(size), removed, error.value());
+    std::snprintf(line, sizeof(line),
+                  "optional runtime mismatch exists=%d size=%u expected=%u directory_removed=%d",
+                  exists, static_cast<unsigned>(size), static_cast<unsigned>(sizeof(token) - 1),
+                  directory_removed);
     record(CPP17_FS, FAIL, line);
   }
 }
@@ -279,7 +315,9 @@ void draw_ui(SDL_Renderer* renderer) {
     if (state == PASS) color(renderer, 54, 220, 133);
     else if (state == FAIL) color(renderer, 255, 93, 93);
     else color(renderer, 246, 205, 75);
-    text(renderer, 820, y, 2, state == PASS ? "PASS" : state == FAIL ? "FAIL" : "NOT RUN");
+    text(renderer, state == OPTIONAL_UNSUPPORTED ? 805 : 820, y, 2,
+         state == PASS ? "PASS" : state == FAIL ? "FAIL" :
+         state == OPTIONAL_UNSUPPORTED ? "UNSUPPORTED" : "NOT RUN");
   }
   color(renderer, 175, 194, 212);
   text(renderer, 13, 421, 2, "LOG: UX0:DATA/CORSIXTH/M1B-PROBE.LOG");
@@ -289,15 +327,22 @@ void draw_ui(SDL_Renderer* renderer) {
 }
 
 void final_summary() {
-  int passes = 0;
-  int failures = 0;
+  int required_pass = 0;
+  int required_fail = 0;
+  int required_not_run = 0;
   for (int i = 0; i < TEST_COUNT; ++i) {
-    if (states[i] == PASS) ++passes;
-    if (states[i] == FAIL) ++failures;
+    if (i == CPP17_FS) continue;
+    if (states[i] == PASS) ++required_pass;
+    if (states[i] == FAIL) ++required_fail;
+    if (states[i] == NOT_RUN) ++required_not_run;
   }
-  char line[160];
-  std::snprintf(line, sizeof(line), "FINAL pass=%d fail=%d not_run=%d device=NOT_RUN",
-                passes, failures, TEST_COUNT - passes - failures);
+  const char* optional = states[CPP17_FS] == PASS ? "PASS" :
+                         states[CPP17_FS] == FAIL ? "FAIL" :
+                         states[CPP17_FS] == OPTIONAL_UNSUPPORTED ? "UNSUPPORTED" : "NOT_RUN";
+  char line[256];
+  std::snprintf(line, sizeof(line),
+                "FINAL required_pass=%d required_fail=%d required_not_run=%d optional_cpp17=%s runtime=VITA_EXECUTED device_acceptance=PENDING_DIRECTOR_REVIEW",
+                required_pass, required_fail, required_not_run, optional);
   log_line("SUMMARY", line);
 }
 } // namespace

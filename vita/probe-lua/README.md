@@ -19,6 +19,8 @@ Install the VPK with VitaShell, launch without game assets, photograph the statu
 
 The probe only writes its log and short tokens inside `ux0:data/corsixth/m1b/`. It removes its token files after successful tests and leaves M1A's `probe.log` alone. JIT status is informational. Runtime PASS requires the Director's actual Vita log and photo; a host build proves only compilation/linking/packaging.
 
+The final runtime log records `runtime=VITA_EXECUTED` and `device_acceptance=PENDING_DIRECTOR_REVIEW`. It counts required test failures separately from the optional C++17 filesystem result. A `std::filesystem` API error is logged as `UNSUPPORTED_OPTIONAL` with the operation, code, category, message, and required native fallback result; it is never converted to PASS.
+
 ## Machine-readable acceptance checklist
 
 ```json
