@@ -1,0 +1,17 @@
+U __errno
+U free
+U malloc
+U memset
+U module_get_export
+U realpath
+U sceClibMemset
+U sceClibPrintf
+U sceKernelGetModuleInfo
+U sceKernelLoadStartModule
+U sceKernelStopUnloadModule
+U sceSblDmac5HashTransform
+U snprintf
+U strcmp
+U strlen
+U strncpy
+U taiGetModuleInfo

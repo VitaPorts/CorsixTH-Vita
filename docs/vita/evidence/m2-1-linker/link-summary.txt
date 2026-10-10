@@ -1,0 +1,6 @@
+Minimal VitaSDK libdl experiment, GCC 15.2.0, 2026-10-10
+-ldl: exit=1; undefined taiGetModuleInfo, sceSblDmac5HashTransform
+-ldl -ltaihen_stub -lSceSblSsMgr_stub: exit=0; output dl_probe_base.elf; no compiler/linker output
+-ldl -lSceSblSsMgr_stub: exit=1; undefined taiGetModuleInfo
+-ldl -ltaihen_stub: exit=1; undefined sceSblDmac5HashTransform
+No device execution; probe ELF is ignored scratch, not a distribution artifact.

@@ -1,0 +1,6 @@
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/lib\libdl.a(main.c.obj): in function `dlsym':
+(.text+0x248): undefined reference to `sceSblDmac5HashTransform'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: (.text+0x278): undefined reference to `sceSblDmac5HashTransform'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/lib\libdl.a(taiutils.c.obj): in function `module_get_export':
+(.text+0x10): undefined reference to `taiGetModuleInfo'
+collect2.exe: error: ld returned 1 exit status
