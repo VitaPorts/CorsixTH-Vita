@@ -60,6 +60,13 @@ Director can install a diagnostic VPK via VitaShell and return `ux0:data/corsixt
 ## Source/CI distinction
 Director may work entirely in native Windows 10. GitHub-hosted Linux CI is an independent build environment, not a local WSL/Docker requirement. For SDK mismatch, compare compiler target triplet and library/package ABI; do not mix host-built and CI libraries. Complete issue #3 inventory before a full game link is treated as meaningful.
 
+## M2.1 engine build attempt
+
+The Vita-only CMake route, exact Windows configure/build commands, dependency
+inventory, resource plan, full logs, and first link blocker are recorded in
+[M2_1_BUILD_REPORT.md](M2_1_BUILD_REPORT.md). Current status is **BLOCKED** at
+ELF link; no engine VPK exists for installation or hardware testing.
+
 ### Verified native Windows host, 2026-10-02
 ```powershell
 $env:VITASDK = "C:\vitasdk"

@@ -1,0 +1,81 @@
+[0/2] Re-checking globbed directories...
+[1/53] Building C object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/random.c.obj
+[2/53] Building CXX object libs/rnc/CMakeFiles/RncLib.dir/rnc.cpp.obj
+[3/53] Linking CXX static library libs\rnc\libRncLib.a
+[4/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/bootstrap.cpp.obj
+[5/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/lua_rnc.cpp.obj
+[6/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/run_length_encoder.cpp.obj
+[7/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/midi_player.cpp.obj
+[8/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/sdl_audio.cpp.obj
+[9/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/persist_lua.cpp.obj
+[10/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/sdl_core.cpp.obj
+[11/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/iso_fs.cpp.obj
+[12/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/sdl_wm.cpp.obj
+[13/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th.cpp.obj
+[14/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_lua.cpp.obj
+[15/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_gfx_font.cpp.obj
+[16/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_gfx_sdl.cpp.obj
+[17/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_lua_iso.cpp.obj
+[18/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_lua_anims.cpp.obj
+[19/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_gfx.cpp.obj
+[20/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_lua_lfs_ext.cpp.obj
+[21/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_lua_gfx.cpp.obj
+[22/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_lua_midi.cpp.obj
+[23/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_lua_strings.cpp.obj
+[24/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_lua_movie.cpp.obj
+[25/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_lua_sound.cpp.obj
+[26/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_lua_map.cpp.obj
+[27/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_lua_ui.cpp.obj
+[28/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_movie.cpp.obj
+[29/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_map_overlays.cpp.obj
+[30/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_strings.cpp.obj
+[31/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_pathfind.cpp.obj
+[32/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_sound.cpp.obj
+[33/53] Building C object CorsixTH/CMakeFiles/corsixth_vita_lpeg.dir/__/third_party/lpeg-1.1.0/lpcap.c.obj
+[34/53] Building C object CorsixTH/CMakeFiles/corsixth_vita_lpeg.dir/__/third_party/lpeg-1.1.0/lpcset.c.obj
+[35/53] Building C object CorsixTH/CMakeFiles/corsixth_vita_lpeg.dir/__/third_party/lpeg-1.1.0/lpcode.c.obj
+[36/53] Building C object CorsixTH/CMakeFiles/corsixth_vita_lpeg.dir/__/third_party/lpeg-1.1.0/lpvm.c.obj
+[37/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_map.cpp.obj
+[38/53] Building C object CorsixTH/CMakeFiles/corsixth_vita_lpeg.dir/__/third_party/lpeg-1.1.0/lptree.c.obj
+[39/53] Building C object CorsixTH/CMakeFiles/corsixth_vita_lfs.dir/__/third_party/luafilesystem-1.8.0/src/lfs.c.obj
+[40/53] Linking C static library CorsixTH\libcorsixth_vita_lpeg.a
+[41/53] Linking C static library CorsixTH\libcorsixth_vita_lfs.a
+[42/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/xmi2mid.cpp.obj
+[43/53] Linking CXX static library CorsixTH\libCorsixTH_lib.a
+[44/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH.dir/SrcUnshared/main.cpp.obj
+[45/53] Building CXX object CorsixTH/CMakeFiles/CorsixTH.dir/Src/main.cpp.obj
+[46/53] Linking CXX executable CorsixTH\CorsixTH
+FAILED: [code=1] CorsixTH/CorsixTH 
+C:\Windows\system32\cmd.exe /C "cd . && C:\vitasdk\bin\arm-vita-eabi-g++.exe -Wl,-q -O2 -g -DNDEBUG -Wl,-z,nocopyreloc CorsixTH/CMakeFiles/CorsixTH.dir/Src/main.cpp.obj CorsixTH/CMakeFiles/CorsixTH.dir/SrcUnshared/main.cpp.obj -o CorsixTH\CorsixTH  CorsixTH/libCorsixTH_lib.a  CorsixTH/libcorsixth_vita_lfs.a  CorsixTH/libcorsixth_vita_lpeg.a  -lSDL2_mixer  -lopusfile  -lopus  -lvorbisfile  -lvorbis  -logg  -lmodplug  -lxmp-lite  -lFLAC  -lfreetype  -lpng16  -lbz2  -lz  -lluajit-5.1  -lSDL2  -lSceGxm_stub  -lSceDisplay_stub  -lSceCtrl_stub  -lSceAppMgr_stub  -lSceAppUtil_stub  -lSceAudio_stub  -lSceAudioIn_stub  -lSceSysmodule_stub  -lSceIofilemgr_stub  -lSceCommonDialog_stub  -lSceTouch_stub  -lSceHid_stub  -lSceMotion_stub  -lScePower_stub  -lSceProcessmgr_stub  -lm  libs/rnc/libRncLib.a && cd ."
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: CorsixTH/libcorsixth_vita_lfs.a(lfs.c.obj): in function `push_link_target':
+C:/CorsixTH-Vita/CorsixTH-Vita/third_party/luafilesystem-1.8.0/src/lfs.c:1089:(.text+0x2a8): undefined reference to `readlink'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: CorsixTH/libcorsixth_vita_lfs.a(lfs.c.obj): in function `lfs_lock_dir':
+C:/CorsixTH-Vita/CorsixTH-Vita/third_party/luafilesystem-1.8.0/src/lfs.c:474:(.text+0x4a4): undefined reference to `symlink'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: CorsixTH/libcorsixth_vita_lfs.a(lfs.c.obj): in function `make_link':
+C:/CorsixTH-Vita/CorsixTH-Vita/third_party/luafilesystem-1.8.0/src/lfs.c:583:(.text+0x8f2): undefined reference to `symlink'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: C:/CorsixTH-Vita/CorsixTH-Vita/third_party/luafilesystem-1.8.0/src/lfs.c:583:(.text+0x8f8): undefined reference to `symlink'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/lib\libluajit-5.1.a(lj_clib.o): in function `clib_error_':
+(.text+0x8): undefined reference to `dlerror'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/lib\libluajit-5.1.a(lj_clib.o): in function `lj_clib_index':
+(.text+0x1c4): undefined reference to `dlsym'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/lib\libluajit-5.1.a(lj_clib.o): in function `lj_clib_load':
+(.text+0x28c): undefined reference to `dlopen'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: (.text+0x360): undefined reference to `dlerror'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: (.text+0x408): undefined reference to `dlopen'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: (.text+0x414): undefined reference to `dlerror'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/lib\libluajit-5.1.a(lj_clib.o): in function `lj_clib_unload':
+(.text+0x500): undefined reference to `dlclose'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/lib\libluajit-5.1.a(lib_package.o): in function `ll_loadfunc':
+(.text+0x75c): undefined reference to `dlsym'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: (.text+0x7b0): undefined reference to `dlopen'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: (.text+0x7c0): undefined reference to `dlerror'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: (.text+0x814): undefined reference to `dlsym'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: (.text+0x820): undefined reference to `dlerror'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: (.text+0x850): undefined reference to `dlsym'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: (.text+0x890): undefined reference to `dlerror'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/lib\libluajit-5.1.a(lib_package.o): in function `lj_cf_package_loader_preload':
+(.text+0xa58): undefined reference to `dlsym'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/lib\libluajit-5.1.a(lib_package.o): in function `lj_cf_package_unloadlib':
+(.text+0xc90): undefined reference to `dlclose'
+collect2.exe: error: ld returned 1 exit status
+ninja: build stopped: subcommand failed.
