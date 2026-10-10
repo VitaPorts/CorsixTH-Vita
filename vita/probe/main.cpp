@@ -207,7 +207,8 @@ void graphics_run(SDL_Renderer* renderer, bool native_renderer) {
       log_sdl_failure(DRAW_TARGET, "SDL_SetRenderTarget(texture)");
     } else {
       const bool drawn = draw_target(renderer);
-      const char* draw_error = SDL_GetError();
+      char draw_error[512];
+      std::snprintf(draw_error, sizeof(draw_error), "%s", SDL_GetError());
       if (SDL_SetRenderTarget(renderer, nullptr) != 0) {
         log_sdl_failure(DRAW_TARGET, "SDL_SetRenderTarget(NULL)");
       } else if (!drawn) {
@@ -317,7 +318,7 @@ int main() {
   }
   if (!controller && SDL_NumJoysticks() > 0) joystick = SDL_JoystickOpen(0);
   log_line(controller ? "input: SDL_GameController Cross=A Start=START" :
-           joystick ? "input: SDL_Joystick Cross=button0 Start=button6" :
+           joystick ? "input: SDL_Joystick Cross=button2 Start=button11" :
                       "input: no controller opened; SDL keyboard events still handled");
   if (renderer) graphics_run(renderer, native_renderer);
   bool running = true;
@@ -331,8 +332,8 @@ int main() {
       running = running && event.cbutton.button != SDL_CONTROLLER_BUTTON_START;
     }
     if (event.type == SDL_JOYBUTTONDOWN && !controller) {
-      rerun = event.jbutton.button == 0;
-      running = running && event.jbutton.button != 6;
+      rerun = event.jbutton.button == 2;
+      running = running && event.jbutton.button != 11;
     }
     if (event.type == SDL_KEYDOWN) {
       rerun = event.key.keysym.sym == SDLK_x;
