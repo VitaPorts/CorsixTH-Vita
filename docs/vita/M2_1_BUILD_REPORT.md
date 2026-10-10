@@ -1,6 +1,101 @@
 # M2.1 engine build evidence — Issue #6
 
-Status: **BLOCKED at final ELF link**. Vita configure passed and all 41 engine/vendor
+## Approved Option B result
+
+Status: **BUILD PASS / DEVICE NOT RUN** for the approved Vita-only adapter on
+branch `codex/m2-cmake-packaging`, starting from
+`4ad8365000eaa6d2c489faca5858ce40f40cf123`. See the [Issue #6 architecture
+decision](https://github.com/VitaPorts/CorsixTH-Vita/issues/6#issuecomment-6101884632).
+PR #20 remains draft. This is a link/package result, not evidence of boot,
+rendering, resource lookup, or gameplay on Vita hardware.
+
+The only production source changes are vendored LuaFileSystem's `lfs.c`,
+`vita/platform/vita_dynamic_loader_unavailable.c`, and the Vita CMake module.
+`CORSIXTH_VITA_LFS_NO_LINKS` is private to the engine LFS target. On Vita,
+`lfs.link` (hard and symbolic), `lfs.lock_dir`, and `lfs.symlinkattributes`
+(table and `"target"` forms) retain their Lua names and return
+`nil, "<operation>: <strerror(ENOSYS)>", ENOSYS`. The ordinary
+directory, attributes, and file code remains compiled. The M1B probe and
+desktop builds do not define that guard. LuaJIT's four correctly typed `dl*`
+entry points deny dynamic native module/FFI loading with `ENOSYS`; `dlerror`
+returns a nonempty per-thread diagnostic once. No `libdl`, taiHEN import,
+kernel plugin, new LuaJIT build, or dependency version was added.
+
+The first Option B engine link produced a symbol-bearing ELF and SELF but
+packaging failed on Windows: `vita-pack-vpk` received 358 separate file
+mappings, making the command approximately 36,475 characters, and `cmd.exe`
+reported `The system cannot execute the specified program.` The Vita CMake
+module now passes directory mappings for `Lua`, `Campaigns`, and `Levels`,
+and stages only the selected `Bitmap` files. This resolves the Windows
+command-length failure without adding resources.
+
+Exact final build commands, with VitaSDK `2026.08` / sequence `2026092555`,
+GCC 15.2.0, CMake 4.4.3, and Ninja 1.13.2:
+
+```powershell
+$env:VITASDK = 'C:/vitasdk'
+cmake -S . -B build-vita-engine -G Ninja -DCMAKE_TOOLCHAIN_FILE=C:/vitasdk/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DVITA=ON -DWITH_LUAJIT=ON -DWITH_MOVIES=OFF -DWITH_UPDATE_CHECK=OFF -DWITH_MIDI_DEVICE=OFF -DWITH_TRACY=OFF -DFETCH_SOUNDFONT=OFF -DFETCH_UNICODE_FONT=OFF -DENABLE_UNIT_TESTS=OFF -DBUILD_ANIMVIEW=OFF -DBUILD_TOOLS=OFF -DSEARCH_LOCAL_DATADIRS=OFF -DUSE_SOURCE_DATADIRS=OFF
+cmake --build build-vita-engine --parallel 4
+```
+
+Final configure and build exited 0 without compiler/linker warnings. Logs are
+in `evidence/m2-1-option-b/configure.log` and `build.log`. The host contract
+tests used Zig 0.14.1 as a Windows test compiler, not as the Vita compiler:
+
+```powershell
+& build-vita-engine/host-tools/ziglang/zig.exe cc -target x86_64-windows-gnu -O2 -ffunction-sections -fdata-sections '-Wl,--gc-sections' -std=c11 -D__vita__=1 -DCORSIXTH_VITA_LFS_NO_LINKS=1 -I C:/vitasdk/arm-vita-eabi/include/luajit-2.1 vita/tests/lfs_link_contract.c -o build-vita-engine/lfs_link_contract.exe
+& build-vita-engine/lfs_link_contract.exe
+& build-vita-engine/host-tools/ziglang/zig.exe cc -target x86_64-windows-gnu -std=c11 -D__vita__=1 -I vita/tests/include vita/platform/vita_dynamic_loader_unavailable.c vita/tests/dynamic_loader_contract.c -o build-vita-engine/dynamic_loader_contract.exe
+& build-vita-engine/dynamic_loader_contract.exe
+```
+
+Both host tests exited 0. The LFS test invokes the actual vendored guarded
+functions with a minimal Lua stack recorder and checks the three return
+values, `errno`, and operation text for all five forms. It compiled with one
+host-only `_WIN32_WINNT` macro redefinition warning from vendored LFS. This
+test compiles LFS's Windows host branch with the Vita guard forced on; the
+Vita POSIX branch was compiled and linked by GCC but not executed on device.
+The loader test checks all four entry points and `dlerror` consume/clear
+behavior. Evidence is in `evidence/m2-1-option-b/*host*.log`.
+
+| Artifact | Size | SHA256 |
+| --- | ---: | --- |
+| `build-vita-engine/CorsixTH/CorsixTH` (symbol-bearing ELF) | 12,915,024 bytes | `ad1ca1375fb9cacafcff30bf83f95200871fd34c8b08da8946da60c0a36b102e` |
+| `build-vita-engine/CorsixTH/eboot.bin` (SELF) | 2,846,576 bytes | `299b2e86de84622a30380e23a43a5bec90aff89ed6419aa1586f44cecbf117b6` |
+| `build-vita-engine/CorsixTH/corsixth_vita_engine.vpk` | 5,699,087 bytes | `c50c12e31ee7484ff6849e00bc265a8ccfc657f453bf4966f180baf4223dbbc8` |
+
+`readelf` confirms `.symtab` and `.debug_info` in the ELF. `nm` confirms
+`luaopen_lfs`, `luaopen_lpeg`, and all four `dl*` definitions; no unresolved
+`readlink`, `symlink`, `dl*`, `taiGetModuleInfo`, or
+`sceSblDmac5HashTransform` remains. The complete 360-entry VPK listing is
+`evidence/m2-1-option-b/vpk-audit.log`; it exactly matches the 358-item
+resource manifest plus `eboot.bin` and `sce_sys/param.sfo`. There are zero
+duplicate or extra entries, all ZIP CRCs pass, each resource's SHA256 matches
+the tracked source, and the SFO contains development ID `CORSXP003`. No
+commercial Theme Hospital game data is packaged.
+
+No official upstream-owned source file changed in Option B; the existing
+`UPSTREAM_DELTA.md` integration points remain the maintenance ledger.
+Runtime risks remain: ordinary LFS operations have not been exercised in the
+full engine on hardware, dynamic native modules and FFI loading are explicitly
+unavailable, and startup paths/SDL window behavior belong to later issues.
+The VPK has not been installed.
+
+```text
+VITA_CONFIGURE=PASS
+ENGINE_COMPILE=PASS
+ENGINE_LINK=PASS
+STATIC_LFS_LPEG=LINKED
+UNSUPPORTED_API_HOST_CONTRACT=PASS
+SELF=PASS
+VPK=PASS
+VPK_MANIFEST=PASS_360_ENTRIES
+DEVICE=NOT_RUN
+```
+
+## Earlier M2.1 result (before Option B)
+
+At the earlier branch head, status was **BLOCKED at final ELF link**. Vita configure passed and all 41 engine/vendor
 compile steps completed. No ELF, SELF, or VPK was produced. Device was not run.
 The source baseline is CorsixTH v0.70.1, peeled commit
 `56bd5d00f76331c7f76d7b696726a7926303ca0c`. The M2 branch began at

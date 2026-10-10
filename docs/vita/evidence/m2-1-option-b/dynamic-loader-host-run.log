@@ -1,0 +1,14 @@
+PASS initial dlerror clear
+PASS dlopen path denied with ENOSYS
+PASS dlopen diagnostic
+PASS dlerror consumes pending failure
+PASS dlopen default FFI scope denied
+PASS default scope diagnostic
+PASS dlerror consumes pending failure
+PASS dlsym denied with ENOSYS
+PASS dlsym diagnostic
+PASS dlerror consumes pending failure
+PASS dlclose never reports success
+PASS dlclose diagnostic
+PASS dlerror consumes pending failure
+dynamic_loader_contract failures=0

@@ -1,0 +1,8 @@
+In file included from vita/tests/lfs_link_contract.c:20:
+vita/tests/../../third_party/luafilesystem-1.8.0/src/lfs.c:34:9: warning: '_WIN32_WINNT' macro redefined [-Wmacro-redefined]
+   34 | #define _WIN32_WINNT 0x600
+      |         ^
+<command line>:3:9: note: previous definition is here
+    3 | #define _WIN32_WINNT 0x0a00
+      |         ^
+1 warning generated.

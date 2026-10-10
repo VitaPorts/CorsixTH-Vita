@@ -1,9 +1,11 @@
 # M2.1 final linker compatibility investigation — Issue #6 / draft PR #20
 
-**Decision status: architecture review required.** This document investigates
-commit `be725a6d270c4755ebab4ae16c415cff81a7d279`. It does not implement
-the proposed adapter. The engine remains **BUILD BLOCKED** at six unresolved
-symbol names; no ELF, SELF, VPK, hashes, or device run exist.
+**Historical investigation; Option B approved and implemented after review.**
+The decision is recorded in [Issue #6](https://github.com/VitaPorts/CorsixTH-Vita/issues/6#issuecomment-6101884632).
+This document investigates
+commit `be725a6d270c4755ebab4ae16c415cff81a7d279`. At that commit, the
+engine was **BUILD BLOCKED** at six unresolved symbol names and had no ELF,
+SELF, or VPK. The implementation and current build status are below.
 
 ## Reachability in the shipped engine
 
@@ -87,6 +89,7 @@ global ENOSYS file into the engine. If approved, document and hash the
 minimal change to pinned vendored LFS separately; retain its original
 provenance hash and keep the M1B diagnostic build unaffected.
 
-No solution is implemented here. After architecture approval, rerun the
-actual engine link and then package only if it succeeds. PR #20 remains draft;
-device installation and test remain out of scope.
+The approved Option B implementation and build evidence are recorded in
+`M2_1_BUILD_REPORT.md`. This option does not add `libdl`, taiHEN imports, or
+a rebuilt LuaJIT. PR #20 remains draft; device installation and test remain
+out of scope.

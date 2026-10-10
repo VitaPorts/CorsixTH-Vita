@@ -28,6 +28,11 @@ function(corsixth_vita_dependencies executable engine)
     "${vendor}/lpeg-1.1.0/lpvm.c")
   add_library(corsixth_vita_lfs STATIC
     "${vendor}/luafilesystem-1.8.0/src/lfs.c")
+  target_compile_definitions(corsixth_vita_lfs PRIVATE CORSIXTH_VITA_LFS_NO_LINKS=1)
+
+  target_sources(${executable} PRIVATE
+    "${CMAKE_SOURCE_DIR}/vita/platform/vita_dynamic_loader_unavailable.c")
+  target_compile_features(${executable} PRIVATE c_std_11)
 
   target_include_directories(corsixth_vita_lpeg PRIVATE "${CORSIXTH_VITA_INCLUDEDIR}/luajit-2.1")
   target_include_directories(corsixth_vita_lfs PRIVATE "${CORSIXTH_VITA_INCLUDEDIR}/luajit-2.1")
@@ -65,11 +70,27 @@ function(corsixth_vita_package executable)
     endforeach()
   endforeach()
   list(SORT resource_paths)
-  set(vpk_files "${CMAKE_SOURCE_DIR}/LICENSE.txt" "LICENSE.txt")
+  # vita-pack-vpk accepts whole directories. Grouping avoids Windows' 32K
+  # command-line limit while retaining the upstream Bitmap install filter.
+  set(bitmap_stage "${CMAKE_CURRENT_BINARY_DIR}/vita-package-stage/Bitmap")
+  file(REMOVE_RECURSE "${bitmap_stage}")
+  file(MAKE_DIRECTORY "${bitmap_stage}")
+  set(vpk_files
+    "${CMAKE_SOURCE_DIR}/LICENSE.txt" "LICENSE.txt"
+    "${resource_root}/CorsixTH.lua" "CorsixTH.lua"
+    "${resource_root}/Lua" "Lua"
+    "${resource_root}/Campaigns" "Campaigns"
+    "${resource_root}/Levels" "Levels"
+    "${bitmap_stage}" "Bitmap")
+  set(resources "${CMAKE_SOURCE_DIR}/LICENSE.txt")
   set(manifest "${CMAKE_BINARY_DIR}/vita-resource-manifest.txt")
   file(WRITE "${manifest}" "# CORSXP003 app0 resource manifest; source: CorsixTH/\nLICENSE.txt\n")
   foreach(entry IN LISTS resource_paths)
-    list(APPEND vpk_files "${resource_root}/${entry}" "${entry}")
+    list(APPEND resources "${resource_root}/${entry}")
+    if(entry MATCHES "^Bitmap/")
+      configure_file("${resource_root}/${entry}"
+        "${CMAKE_CURRENT_BINARY_DIR}/vita-package-stage/${entry}" COPYONLY)
+    endif()
     file(APPEND "${manifest}" "${entry}\n")
   endforeach()
   list(LENGTH resource_paths resource_count)
