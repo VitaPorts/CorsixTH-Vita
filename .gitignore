@@ -114,3 +114,15 @@ CorsixTH/corsix-th
 # Nix
 *.so
 /result*
+
+# Local-only Vita port files (M0)
+_reference/
+build-vita/
+build-vita-*/
+.vscode/*.log
+*.vpk
+*.self
+*.elf
+probe.log
+vita.log
+_theme_hospital_private/
