@@ -1,0 +1,3 @@
+vita=const Uint32 window_flags = SDL_WINDOW_SHOWN;
+desktop_guard=const Uint32 window_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
+status=PASS (source preprocessing with Vita cross-compiler; not a desktop build)
