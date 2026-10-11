@@ -41,12 +41,16 @@ SOFTWARE.
 #include <new>
 #include <stack>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 #include "persist_lua.h"
 #include "th_gfx.h"
 #include "th_gfx_common.h"
 #include "th_gfx_font.h"
+#ifdef __vita__
+#include "../../vita/platform/startup.h"
+#endif
 
 #if SDL_VERSION_ATLEAST(2, 0, 10)
 
@@ -388,7 +392,24 @@ render_target::scoped_target_texture::scoped_target_texture(
 
   texture = SDL_CreateTexture(target->renderer, SDL_PIXELFORMAT_ABGR8888,
                               SDL_TEXTUREACCESS_TARGET, iWidth, iHeight);
+  if (!texture) {
+#ifdef __vita__
+    char detail[256];
+    std::snprintf(detail, sizeof(detail),
+                  "SDL_CreateTexture ABGR8888 target %dx%d failed: %s",
+                  iWidth, iHeight, SDL_GetError());
+    corsixth_vita::log("renderer", detail);
+#endif
+    return;
+  }
   if (SDL_SetRenderTarget(target->renderer, texture) != 0) {
+#ifdef __vita__
+    char detail[256];
+    std::snprintf(detail, sizeof(detail),
+                  "SDL_SetRenderTarget ABGR8888 %dx%d failed: %s",
+                  iWidth, iHeight, SDL_GetError());
+    corsixth_vita::log("renderer", detail);
+#endif
     SDL_DestroyTexture(texture);
     texture = nullptr;
     return;
@@ -440,24 +461,54 @@ render_target::render_target(const render_target_creation_params& params)
       direct_zoom{params.direct_zoom} {
   SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
   pixel_format = SDL_AllocFormat(SDL_PIXELFORMAT_ABGR8888);
+  if (!pixel_format) {
+    throw std::runtime_error(std::string("SDL_AllocFormat ABGR8888: ") + SDL_GetError());
+  }
+#ifdef __vita__
+  const Uint32 window_flags = SDL_WINDOW_SHOWN;
+#else
+  const Uint32 window_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
+#endif
   window = SDL_CreateWindow("CorsixTH", SDL_WINDOWPOS_UNDEFINED,
                             SDL_WINDOWPOS_UNDEFINED, width, height,
-                            SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+                            window_flags);
   if (!window) {
-    throw std::runtime_error(SDL_GetError());
+    throw std::runtime_error(std::string("SDL_CreateWindow: ") + SDL_GetError());
   }
 
   Uint32 iRendererFlags =
       (params.present_immediate ? 0 : SDL_RENDERER_PRESENTVSYNC);
   renderer = SDL_CreateRenderer(window, -1, iRendererFlags);
+  if (!renderer) {
+    throw std::runtime_error(std::string("SDL_CreateRenderer: ") + SDL_GetError());
+  }
 
-  SDL_RendererInfo info;
-  SDL_GetRendererInfo(renderer, &info);
+  SDL_RendererInfo info{};
+  if (SDL_GetRendererInfo(renderer, &info) != 0) {
+    throw std::runtime_error(std::string("SDL_GetRendererInfo: ") + SDL_GetError());
+  }
   supports_target_textures = (info.flags & SDL_RENDERER_TARGETTEXTURE) != 0;
+#ifdef __vita__
+  bool abgr8888_advertised = false;
+  for (Uint32 i = 0; i < info.num_texture_formats; ++i) {
+    abgr8888_advertised |= info.texture_formats[i] == SDL_PIXELFORMAT_ABGR8888;
+  }
+  char detail[256];
+  std::snprintf(detail, sizeof(detail),
+                "name=%s flags=0x%08x targettexture=%d abgr8888_advertised=%d max=%dx%d formats=%u",
+                info.name ? info.name : "(null)", info.flags,
+                supports_target_textures, abgr8888_advertised,
+                info.max_texture_width, info.max_texture_height,
+                info.num_texture_formats);
+  corsixth_vita::log("renderer", detail);
+  if (!supports_target_textures) {
+    throw std::runtime_error("SDL renderer lacks SDL_RENDERER_TARGETTEXTURE");
+  }
+#endif
 
   SDL_version sdlVersion;
   SDL_GetVersion(&sdlVersion);
-  apply_opengl_clip_fix = std::strncmp(info.name, "opengl", 6) == 0 &&
+  apply_opengl_clip_fix = info.name && std::strncmp(info.name, "opengl", 6) == 0 &&
                           sdlVersion.major == 2 && sdlVersion.minor == 0 &&
                           sdlVersion.patch < 4;
   SDL_SetWindowMinimumSize(window, params.min_width, params.min_height);
@@ -573,7 +624,15 @@ void render_target::set_caption(const char* sCaption) {
 
 const char* render_target::get_renderer_details() const {
   SDL_RendererInfo info = {};
-  SDL_GetRendererInfo(renderer, &info);
+  if (SDL_GetRendererInfo(renderer, &info) != 0) {
+#ifdef __vita__
+    char detail[256];
+    std::snprintf(detail, sizeof(detail), "SDL_GetRendererInfo failed: %s",
+                  SDL_GetError());
+    corsixth_vita::log("renderer", detail);
+#endif
+    return SDL_GetError();
+  }
   return info.name;
 }
 

@@ -1,0 +1,3 @@
+build-vita-engine/CorsixTH/CorsixTH|12744548|7728f1169fe3c22ac49006830420b97370985e468176440e9eb5aafb01b5803d
+build-vita-engine/CorsixTH/eboot.bin|2801003|68a6066d147afcd7aeb3325cdcbb46cbb39f6132751e8ecde30413b607db6e8d
+build-vita-engine/CorsixTH/corsixth_vita_engine.vpk|5653956|a99722120a6e781c5ca34ed9fd08fc7535ea5db9c87a51d257e7f329e2e8aa14
