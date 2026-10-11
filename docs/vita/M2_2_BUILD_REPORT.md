@@ -1,6 +1,8 @@
 # M2.2 Vita startup, filesystem and logging — Issue #7
 
-Status: **LOCAL BUILD PASS / BUILD GATE PENDING GPT REVIEW / DEVICE NOT RUN**.
+Initial package status (before the hardware follow-up): **LOCAL BUILD PASS / DEVICE NOT RUN**.
+See the hardware follow-up section below for the observed Vita failure and the
+replacement build status.
 Branch `codex/m2-startup-filesystem`
 starts from accepted M2.1 merge `fb48daadcac92effdc55f4c71c83631fa931fc30`;
 official CorsixTH baseline remains v0.70.1
@@ -24,7 +26,8 @@ It trims that file and uses its nonempty contents as the user config directory.
 The early Vita module creates that directory before Lua begins, avoiding the
 upstream fallback to the read-only resource directory if directory creation
 fails. The app's existing config-path-derived defaults then select user
-Saves/Screenshots/Levels/Campaigns/Logs. No Lua game file was changed.
+Saves/Screenshots/Levels/Campaigns/Logs. No Lua game file was changed in the
+initial M2.2 package.
 
 - `vita/platform/startup.h`, `startup.cpp`: checked `ux0:` directory setup,
   early `app0:` resource and config redirect checks, errno diagnostics, and
@@ -115,3 +118,83 @@ DEVICE_BOOT_LOG=NOT_RUN
 DEVICE_BOOT=NOT_RUN
 DESKTOP_BUILD=NOT_RUN
 ```
+
+## Physical Vita report and focused follow-up (2026-10-11)
+
+The Director's [Issue #7 hardware report](https://github.com/VitaPorts/CorsixTH-Vita/issues/7#issuecomment-6105211356)
+used the original VPK above on a real FAT Vita. It created the expected
+`ux0:data/corsixth/` directories and `user/config.txt`, found packaged
+`app0:` resources, loaded `CorsixTH.lua`, and initialized LuaJIT. Protected
+Lua startup then failed at `Lua/app.lua:1157` (`value:match` on nil) because
+neither `USER` nor `USERNAME` existed. The log subsequently recorded
+`[vita:mainloop] entering`, and the device showed a black screen for about
+60 seconds until the PS button was used. This establishes a **partial device
+pass for startup filesystem and logging**, not a full engine boot or render
+pass. No original game data was on the device for this test.
+
+`App:fixConfig()` now converts absent environment values to `""` before
+trimming, so the existing `PLAYER` fallback runs. This one-line Lua fix also
+preserves a configured player name and the existing `USER` then `USERNAME`
+precedence on desktop. The protected error reporter uses an SDL video path
+and can return without a usable app window. On Vita only, if it returns after
+a failed protected startup, the engine logs the fatal exit, destroys Lua,
+closes open mixer audio, calls `SDL_Quit`, and returns status 1 before the
+normal main loop. This follows the cleanup order already used on normal exit.
+Whether the error reporter itself can display on Vita remains unverified.
+
+The regression test executes the actual `App:fixConfig()` Lua function with
+host LuaJIT 2.1 via test-only `lupa==2.8`. It covers absent variables, blank
+variables, `USERNAME`, `USER` precedence, and a configured name; all five
+passed. `lupa` is installed only under ignored `build-vita-engine/host-tools/`
+and is not linked into or packaged with the game. The test and full build
+transcripts are in `evidence/m2-2-hardware-followup/`.
+
+Exact commands from the repository root:
+
+```powershell
+python -m pip install --target build-vita-engine/host-tools/lupa lupa==2.8 --no-deps
+python vita/tests/test_player_name.py
+$env:VITASDK = 'C:/vitasdk'
+cmake -S . -B build-vita-engine -G Ninja -DCMAKE_TOOLCHAIN_FILE=C:/vitasdk/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DVITA=ON -DWITH_LUAJIT=ON -DWITH_MOVIES=OFF -DWITH_UPDATE_CHECK=OFF -DWITH_MIDI_DEVICE=OFF -DWITH_TRACY=OFF -DFETCH_SOUNDFONT=OFF -DFETCH_UNICODE_FONT=OFF -DENABLE_UNIT_TESTS=OFF -DBUILD_ANIMVIEW=OFF -DBUILD_TOOLS=OFF -DSEARCH_LOCAL_DATADIRS=OFF -DUSE_SOURCE_DATADIRS=OFF
+cmake --build build-vita-engine --clean-first --parallel 4
+cmake --build build-vita-engine --parallel 4
+python vita/tests/audit_startup_package.py
+Get-FileHash -Algorithm SHA256 build-vita-engine/CorsixTH/CorsixTH,build-vita-engine/CorsixTH/eboot.bin,build-vita-engine/CorsixTH/corsixth_vita_engine.vpk
+```
+
+Pinned SDK remains Windows VitaSDK channel `2026.08`, sequence
+`2026092555`, GCC/G++ `15.2.0`, CMake `4.4.3`, Ninja `1.13.2`; target
+dependency versions are unchanged. Configure, a clean full
+compile/link/package build, and a final package rerun exited 0. The rerun
+recreated the VPK with a different SHA256 while the ELF and SELF stayed
+identical; the hash below identifies the final audited file. There were no compiler/linker warnings,
+errors, or unresolved symbols. The symbol-bearing ELF has `.symtab` and
+`.debug_info`. The package audit exited 0 with **361 unique entries**:
+359 CorsixTH resources, `eboot.bin`, and `sce_sys/param.sfo`; no missing or
+extra entries, CRC failures, source-hash mismatches, or commercial game data.
+`app0:/CorsixTH.lua`, `config.path.txt` with the `ux0:` redirect, and
+development title ID `CORSXP003` are present. The audit's full archive list
+is preserved in `package-audit.log`.
+
+| New artifact | Bytes | SHA256 |
+| --- | ---: | --- |
+| `build-vita-engine/CorsixTH/CorsixTH` (symbol-bearing ELF) | 12,695,624 | `c5e178941969fd8b2cec92b2ceb91865786e850ee7a2a7948c7ea8c74d91ed31` |
+| `build-vita-engine/CorsixTH/eboot.bin` (SELF) | 2,800,072 | `191f73ec8f0e30ab85bf2f70607a68bfa11502f8a141caf144a52f209b360fdb` |
+| `build-vita-engine/CorsixTH/corsixth_vita_engine.vpk` | 5,652,769 | `2d882b26dbc76120ff0094cabc615613743358518f1a189d0d3709915897b3c0` |
+
+```text
+FOLLOWUP_LUAJIT_REGRESSION=PASS_5
+FOLLOWUP_VITA_CONFIGURE=PASS
+FOLLOWUP_ENGINE_COMPILE_LINK=PASS
+FOLLOWUP_ELF_SYMBOLS=PASS
+FOLLOWUP_SELF=PASS
+FOLLOWUP_VPK=PASS
+FOLLOWUP_VPK_MANIFEST=PASS_361_ENTRIES
+PR_REVIEW=PENDING
+NEW_ARTIFACT_DEVICE_TEST=NOT_RUN
+FULL_ENGINE_BOOT=BLOCKED_ON_NEW_DEVICE_TEST
+RENDERER=NOT_REACHED_IN_REPORTED_TEST
+```
+
+The new VPK must receive separate GPT review and another Director hardware
+test. No renderer flags or original game assets were changed or included.

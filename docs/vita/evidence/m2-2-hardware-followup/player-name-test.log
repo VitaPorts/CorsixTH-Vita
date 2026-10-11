@@ -1,0 +1,10 @@
+test_blank_environment_uses_player (__main__.PlayerNameTest.test_blank_environment_uses_player) ... ok
+test_configured_name_precedes_environment (__main__.PlayerNameTest.test_configured_name_precedes_environment) ... ok
+test_missing_environment_uses_player (__main__.PlayerNameTest.test_missing_environment_uses_player) ... ok
+test_user_precedes_username (__main__.PlayerNameTest.test_user_precedes_username) ... ok
+test_username_fallback (__main__.PlayerNameTest.test_username_fallback) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.003s
+
+OK

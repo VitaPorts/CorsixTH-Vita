@@ -1,0 +1,58 @@
+[0/2] Re-checking globbed directories...
+[1/2] Cleaning all built files...
+Cleaning... 54 files.
+[0/2] Re-checking globbed directories...
+[1/55] Building C object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/random.c.obj
+[2/55] Building CXX object libs/rnc/CMakeFiles/RncLib.dir/rnc.cpp.obj
+[3/55] Linking CXX static library libs\rnc\libRncLib.a
+[4/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/bootstrap.cpp.obj
+[5/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/lua_rnc.cpp.obj
+[6/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/run_length_encoder.cpp.obj
+[7/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/midi_player.cpp.obj
+[8/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/sdl_audio.cpp.obj
+[9/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/persist_lua.cpp.obj
+[10/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/iso_fs.cpp.obj
+[11/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/sdl_wm.cpp.obj
+[12/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/sdl_core.cpp.obj
+[13/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th.cpp.obj
+[14/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_lua.cpp.obj
+[15/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_gfx_font.cpp.obj
+[16/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_gfx_sdl.cpp.obj
+[17/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_lua_iso.cpp.obj
+[18/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_lua_anims.cpp.obj
+[19/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_gfx.cpp.obj
+[20/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_lua_lfs_ext.cpp.obj
+[21/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_lua_gfx.cpp.obj
+[22/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_lua_midi.cpp.obj
+[23/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_lua_movie.cpp.obj
+[24/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_lua_strings.cpp.obj
+[25/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_lua_sound.cpp.obj
+[26/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_lua_map.cpp.obj
+[27/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_lua_ui.cpp.obj
+[28/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_movie.cpp.obj
+[29/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_map_overlays.cpp.obj
+[30/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_pathfind.cpp.obj
+[31/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_strings.cpp.obj
+[32/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_sound.cpp.obj
+[33/55] Building C object CorsixTH/CMakeFiles/corsixth_vita_lpeg.dir/__/third_party/lpeg-1.1.0/lpcap.c.obj
+[34/55] Building C object CorsixTH/CMakeFiles/corsixth_vita_lpeg.dir/__/third_party/lpeg-1.1.0/lpcset.c.obj
+[35/55] Building C object CorsixTH/CMakeFiles/corsixth_vita_lpeg.dir/__/third_party/lpeg-1.1.0/lpcode.c.obj
+[36/55] Building C object CorsixTH/CMakeFiles/corsixth_vita_lpeg.dir/__/third_party/lpeg-1.1.0/lpvm.c.obj
+[37/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/th_map.cpp.obj
+[38/55] Building C object CorsixTH/CMakeFiles/corsixth_vita_lpeg.dir/__/third_party/lpeg-1.1.0/lptree.c.obj
+[39/55] Building C object CorsixTH/CMakeFiles/corsixth_vita_lfs.dir/__/third_party/luafilesystem-1.8.0/src/lfs.c.obj
+[40/55] Building C object CorsixTH/CMakeFiles/CorsixTH.dir/__/vita/platform/vita_dynamic_loader_unavailable.c.obj
+[41/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH.dir/__/vita/platform/startup.cpp.obj
+[42/55] Linking C static library CorsixTH\libcorsixth_vita_lpeg.a
+[43/55] Linking C static library CorsixTH\libcorsixth_vita_lfs.a
+[44/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH_lib.dir/Src/xmi2mid.cpp.obj
+[45/55] Linking CXX static library CorsixTH\libCorsixTH_lib.a
+[46/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH.dir/SrcUnshared/main.cpp.obj
+[47/55] Building CXX object CorsixTH/CMakeFiles/CorsixTH.dir/Src/main.cpp.obj
+[48/55] Linking CXX executable CorsixTH\CorsixTH
+[49/55] Converting to Sony ELF CorsixTH.velf
+[50/55] Creating SELF eboot.bin
+[51/55] C:\Windows\system32\cmd.exe /C "cd /D C:\CorsixTH-Vita\CorsixTH-Vita\build-vita-engine\CorsixTH && "C:\Program Files\CMake\bin\cmake.exe" -E copy C:/CorsixTH-Vita/CorsixTH-Vita/build-vita-engine/CorsixTH/eboot.bin.out eboot.bin"
+[52/55] Generating param.sfo for corsixth_vita_engine.vpk
+[53/55] Building vpk corsixth_vita_engine.vpk
+[54/55] C:\Windows\system32\cmd.exe /C "cd /D C:\CorsixTH-Vita\CorsixTH-Vita\build-vita-engine\CorsixTH && "C:\Program Files\CMake\bin\cmake.exe" -E copy C:/CorsixTH-Vita/CorsixTH-Vita/build-vita-engine/CorsixTH/corsixth_vita_engine.vpk.out corsixth_vita_engine.vpk"

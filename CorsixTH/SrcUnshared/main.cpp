@@ -202,6 +202,17 @@ int main(int argc, char** argv) {
       if (lua_pcall(L.get(), 1, 0, 0) != 0) {
         std::fprintf(stderr, "%s\n", lua_tostring(L.get(), -1));
       }
+#ifdef __vita__
+      // The error reporter may return without creating a window. Do not enter
+      // the normal event loop with an incompletely initialized Lua app.
+      corsixth_vita::log("startup", "FAIL protected Lua startup; exiting after error report");
+      L.reset(nullptr);
+      while (Mix_QuerySpec(nullptr, nullptr, nullptr)) {
+        Mix_CloseAudio();
+      }
+      SDL_Quit();
+      return 1;
+#endif
     }
 #ifdef __vita__
     else {
