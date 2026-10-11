@@ -28,12 +28,16 @@ SOFTWARE.
 #include <SDL_mixer.h>
 
 #include <cstdio>
+#include <exception>
 #include <memory>
 
 #include "../Src/bootstrap.h"
 #include "../Src/lua.hpp"
 #include "../Src/sdl_core.h"
 #include "../Src/th_lua.h"
+#ifdef __vita__
+#include "../../vita/platform/startup.h"
+#endif
 #ifdef WITH_UPDATE_CHECK
 #include <curl/curl.h>
 #endif
@@ -101,6 +105,16 @@ void l_tracy_hook(lua_State* L, lua_Debug* ar) {
     for lua_init().
 */
 int main(int argc, char** argv) {
+#ifdef __vita__
+  if (!corsixth_vita::initialize()) {
+    corsixth_vita::log("platform", "FAIL startup path initialization; aborting");
+    corsixth_vita::shutdown();
+    return 1;
+  }
+  struct vita_log_guard {
+    ~vita_log_guard() { corsixth_vita::shutdown(); }
+  } log_guard;
+#endif
   struct compile_time_lua_check {
     // Lua 5.1, not 5.0, is required
     int lua_5_point_1_required[LUA_VERSION_NUM >= 501 ? 1 : -1];
@@ -117,12 +131,22 @@ int main(int argc, char** argv) {
   bool bRun = true;
 
   while (bRun) {
+#ifdef __vita__
+    corsixth_vita::log("lua", "creating Lua state");
+#endif
     lua_state_unique_ptr L(luaL_newstate());
     if (L == nullptr) {
+#ifdef __vita__
+      corsixth_vita::log("lua", "FAIL luaL_newstate returned null");
+#endif
       std::fprintf(stderr,
                    "Fatal error starting CorsixTH: "
                    "Cannot open Lua state.\n");
+#ifdef __vita__
+      return 1;
+#else
       return 0;
+#endif
     }
 #ifdef WITH_TRACY
     tracy::LuaRegister(L.get());
@@ -132,6 +156,9 @@ int main(int argc, char** argv) {
 #endif
     lua_atpanic(L.get(), lua_panic);
     luaL_openlibs(L.get());
+#ifdef __vita__
+    corsixth_vita::log("lua", "standard libraries open; protected startup next");
+#endif
     lua_settop(L.get(), 0);
     lua_pushcfunction(L.get(), lua_stacktrace);
     lua_pushcfunction(L.get(), lua_init);
@@ -142,8 +169,27 @@ int main(int argc, char** argv) {
       lua_pushstring(L.get(), argv[i]);
     }
 
-    if (lua_pcall(L.get(), argc, 0, 1) != 0) {
+    int init_result;
+#ifdef __vita__
+    try {
+      init_result = lua_pcall(L.get(), argc, 0, 1);
+    } catch (const std::exception& error) {
+      corsixth_vita::log("startup", error.what());
+      const char* sdl_error = SDL_GetError();
+      if (sdl_error && *sdl_error) corsixth_vita::log("sdl", sdl_error);
+      return 1;
+    }
+#else
+    init_result = lua_pcall(L.get(), argc, 0, 1);
+#endif
+    if (init_result != 0) {
       const char* err = lua_tostring(L.get(), -1);
+#ifdef __vita__
+      corsixth_vita::log("lua", err ? err : "FAIL non-string protected startup error");
+      const char* sdl_error = SDL_GetError();
+      if (sdl_error && *sdl_error)
+        corsixth_vita::log("sdl", sdl_error);
+#endif
       if (err != nullptr) {
         std::fprintf(stderr, "%s\n", err);
       } else {
@@ -157,7 +203,18 @@ int main(int argc, char** argv) {
         std::fprintf(stderr, "%s\n", lua_tostring(L.get(), -1));
       }
     }
+#ifdef __vita__
+    else {
+      corsixth_vita::log("lua", "protected startup returned");
+      corsixth_vita::log("sdl", SDL_WasInit(0)
+          ? "SDL initialized" : "SDL not initialized by startup");
+    }
+    corsixth_vita::log("mainloop", "entering");
+#endif
     mainloop(L.get());
+#ifdef __vita__
+    corsixth_vita::log("mainloop", "returned");
+#endif
 
     lua_getfield(L.get(), LUA_REGISTRYINDEX, "_RESTART");
     bRun = lua_toboolean(L.get(), -1) != 0;

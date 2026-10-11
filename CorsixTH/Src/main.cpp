@@ -25,7 +25,9 @@ SOFTWARE.
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#ifndef __vita__
 #include <filesystem>
+#endif
 #include <string>
 #include <string_view>
 
@@ -34,6 +36,10 @@ SOFTWARE.
 #include "lua_sdl.h"
 #include "persist_lua.h"
 #include "th_lua.h"
+
+#ifdef __vita__
+#include "../../vita/platform/startup.h"
+#endif
 
 #ifdef CORSIX_TH_SEARCH_LOCAL_DATADIRS
 #include <array>
@@ -57,9 +63,18 @@ int luaopen_lpeg(lua_State* L);
 
 namespace {
 
+#ifdef __vita__
+bool file_exists(std::string_view f) {
+  // VitaSDK's C++ filesystem status is not a reliable app0: file probe.
+  const std::string path(f);
+  FILE* input = std::fopen(path.c_str(), "rb");
+  if (!input) return false;
+  return std::fclose(input) == 0;
+#else
 bool file_exists(const std::filesystem::path& f) {
   const std::filesystem::file_status st = std::filesystem::status(f);
   return std::filesystem::exists(st) && !std::filesystem::is_directory(st);
+#endif
 }
 
 std::string search_script_file(lua_State* L) {
@@ -168,6 +183,10 @@ int lua_init_no_eval(lua_State* L) {
   luaT_execute(L, "require \"debug\"");
 
   auto scriptFilePath = search_script_file(L);
+#ifdef __vita__
+  corsixth_vita::log("interpreter", scriptFilePath.empty()
+      ? "FAIL CorsixTH.lua not found" : scriptFilePath.c_str());
+#endif
   if (scriptFilePath.empty()) {
     std::fprintf(stderr,
                  "CorsixTH cannot find CorsixTH.lua. If you want use a custom "
@@ -214,6 +233,11 @@ int lua_stacktrace(lua_State* L) {
 }
 
 int lua_panic(lua_State* L) {
+#ifdef __vita__
+  corsixth_vita::log("lua", "FAIL unprotected Lua panic");
+  if (lua_type(L, -1) == LUA_TSTRING)
+    corsixth_vita::log("lua", lua_tostring(L, -1));
+#endif
   std::fprintf(stderr,
                "A Lua error has occurred in CorsixTH outside of protected "
                "mode!\n");

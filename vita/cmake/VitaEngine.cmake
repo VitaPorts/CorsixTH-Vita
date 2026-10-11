@@ -31,7 +31,8 @@ function(corsixth_vita_dependencies executable engine)
   target_compile_definitions(corsixth_vita_lfs PRIVATE CORSIXTH_VITA_LFS_NO_LINKS=1)
 
   target_sources(${executable} PRIVATE
-    "${CMAKE_SOURCE_DIR}/vita/platform/vita_dynamic_loader_unavailable.c")
+    "${CMAKE_SOURCE_DIR}/vita/platform/vita_dynamic_loader_unavailable.c"
+    "${CMAKE_SOURCE_DIR}/vita/platform/startup.cpp")
   target_compile_features(${executable} PRIVATE c_std_11)
 
   target_include_directories(corsixth_vita_lpeg PRIVATE "${CORSIXTH_VITA_INCLUDEDIR}/luajit-2.1")
@@ -77,14 +78,16 @@ function(corsixth_vita_package executable)
   file(MAKE_DIRECTORY "${bitmap_stage}")
   set(vpk_files
     "${CMAKE_SOURCE_DIR}/LICENSE.txt" "LICENSE.txt"
+    "${CMAKE_SOURCE_DIR}/vita/resources/config.path.txt" "config.path.txt"
     "${resource_root}/CorsixTH.lua" "CorsixTH.lua"
     "${resource_root}/Lua" "Lua"
     "${resource_root}/Campaigns" "Campaigns"
     "${resource_root}/Levels" "Levels"
     "${bitmap_stage}" "Bitmap")
-  set(resources "${CMAKE_SOURCE_DIR}/LICENSE.txt")
+  set(resources "${CMAKE_SOURCE_DIR}/LICENSE.txt"
+    "${CMAKE_SOURCE_DIR}/vita/resources/config.path.txt")
   set(manifest "${CMAKE_BINARY_DIR}/vita-resource-manifest.txt")
-  file(WRITE "${manifest}" "# CORSXP003 app0 resource manifest; source: CorsixTH/\nLICENSE.txt\n")
+  file(WRITE "${manifest}" "# CORSXP003 app0 resource manifest; source: CorsixTH/ except noted\nLICENSE.txt\nconfig.path.txt\n")
   foreach(entry IN LISTS resource_paths)
     list(APPEND resources "${resource_root}/${entry}")
     if(entry MATCHES "^Bitmap/")
