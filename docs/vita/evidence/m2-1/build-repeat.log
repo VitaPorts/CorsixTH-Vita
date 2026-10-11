@@ -1,0 +1,36 @@
+[0/2] Re-checking globbed directories...
+[1/8] Linking CXX executable CorsixTH\CorsixTH
+FAILED: [code=1] CorsixTH/CorsixTH 
+C:\Windows\system32\cmd.exe /C "cd . && C:\vitasdk\bin\arm-vita-eabi-g++.exe -Wl,-q -O2 -g -DNDEBUG -Wl,-z,nocopyreloc CorsixTH/CMakeFiles/CorsixTH.dir/Src/main.cpp.obj CorsixTH/CMakeFiles/CorsixTH.dir/SrcUnshared/main.cpp.obj -o CorsixTH\CorsixTH  CorsixTH/libCorsixTH_lib.a  CorsixTH/libcorsixth_vita_lfs.a  CorsixTH/libcorsixth_vita_lpeg.a  -lSDL2_mixer  -lopusfile  -lopus  -lvorbisfile  -lvorbis  -logg  -lmodplug  -lxmp-lite  -lFLAC  -lfreetype  -lpng16  -lbz2  -lz  -lluajit-5.1  -lSDL2  -lSceGxm_stub  -lSceDisplay_stub  -lSceCtrl_stub  -lSceAppMgr_stub  -lSceAppUtil_stub  -lSceAudio_stub  -lSceAudioIn_stub  -lSceSysmodule_stub  -lSceIofilemgr_stub  -lSceCommonDialog_stub  -lSceTouch_stub  -lSceHid_stub  -lSceMotion_stub  -lScePower_stub  -lSceProcessmgr_stub  -lm  libs/rnc/libRncLib.a && cd ."
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: CorsixTH/libcorsixth_vita_lfs.a(lfs.c.obj): in function `push_link_target':
+C:/CorsixTH-Vita/CorsixTH-Vita/third_party/luafilesystem-1.8.0/src/lfs.c:1089:(.text+0x2a8): undefined reference to `readlink'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: CorsixTH/libcorsixth_vita_lfs.a(lfs.c.obj): in function `lfs_lock_dir':
+C:/CorsixTH-Vita/CorsixTH-Vita/third_party/luafilesystem-1.8.0/src/lfs.c:474:(.text+0x4a4): undefined reference to `symlink'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: CorsixTH/libcorsixth_vita_lfs.a(lfs.c.obj): in function `make_link':
+C:/CorsixTH-Vita/CorsixTH-Vita/third_party/luafilesystem-1.8.0/src/lfs.c:583:(.text+0x8f2): undefined reference to `symlink'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: C:/CorsixTH-Vita/CorsixTH-Vita/third_party/luafilesystem-1.8.0/src/lfs.c:583:(.text+0x8f8): undefined reference to `symlink'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/lib\libluajit-5.1.a(lj_clib.o): in function `clib_error_':
+(.text+0x8): undefined reference to `dlerror'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/lib\libluajit-5.1.a(lj_clib.o): in function `lj_clib_index':
+(.text+0x1c4): undefined reference to `dlsym'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/lib\libluajit-5.1.a(lj_clib.o): in function `lj_clib_load':
+(.text+0x28c): undefined reference to `dlopen'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: (.text+0x360): undefined reference to `dlerror'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: (.text+0x408): undefined reference to `dlopen'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: (.text+0x414): undefined reference to `dlerror'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/lib\libluajit-5.1.a(lj_clib.o): in function `lj_clib_unload':
+(.text+0x500): undefined reference to `dlclose'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/lib\libluajit-5.1.a(lib_package.o): in function `ll_loadfunc':
+(.text+0x75c): undefined reference to `dlsym'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: (.text+0x7b0): undefined reference to `dlopen'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: (.text+0x7c0): undefined reference to `dlerror'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: (.text+0x814): undefined reference to `dlsym'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: (.text+0x820): undefined reference to `dlerror'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: (.text+0x850): undefined reference to `dlsym'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: (.text+0x890): undefined reference to `dlerror'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/lib\libluajit-5.1.a(lib_package.o): in function `lj_cf_package_loader_preload':
+(.text+0xa58): undefined reference to `dlsym'
+C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/bin/ld.exe: C:/vitasdk/bin/../lib/gcc/arm-vita-eabi/15.2.0/../../../../arm-vita-eabi/lib\libluajit-5.1.a(lib_package.o): in function `lj_cf_package_unloadlib':
+(.text+0xc90): undefined reference to `dlclose'
+collect2.exe: error: ld returned 1 exit status
+ninja: build stopped: subcommand failed.

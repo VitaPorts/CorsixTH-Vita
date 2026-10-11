@@ -87,6 +87,10 @@
 
 #include "lfs.h"
 
+#if defined(CORSIXTH_VITA_LFS_NO_LINKS) && !defined(__vita__)
+#error CORSIXTH_VITA_LFS_NO_LINKS is only for Vita builds
+#endif
+
 #define LFS_VERSION "1.8.0"
 #define LFS_LIBNAME "lfs"
 
@@ -252,6 +256,15 @@ static int pushresult(lua_State * L, int res, const char *info)
   }
 }
 
+#ifdef CORSIXTH_VITA_LFS_NO_LINKS
+/* Keep the LFS Lua API shape while refusing unsupported Vita link operations. */
+static int unsupported_link(lua_State * L, const char *operation)
+{
+  errno = ENOSYS;
+  return pusherror(L, operation);
+}
+#endif
+
 
 /*
 ** This function changes the working (current) directory
@@ -415,6 +428,10 @@ typedef struct lfs_Lock {
 } lfs_Lock;
 static int lfs_lock_dir(lua_State * L)
 {
+#ifdef CORSIXTH_VITA_LFS_NO_LINKS
+  (void) luaL_checkstring(L, 1);
+  return unsupported_link(L, "lfs.lock_dir unsupported on Vita");
+#else
   size_t pathl;
   HANDLE fd;
   lfs_Lock *lock;
@@ -440,6 +457,7 @@ static int lfs_lock_dir(lua_State * L)
   luaL_getmetatable(L, LOCK_METATABLE);
   lua_setmetatable(L, -2);
   return 1;
+#endif
 }
 
 static int lfs_unlock_dir(lua_State * L)
@@ -457,6 +475,10 @@ typedef struct lfs_Lock {
 } lfs_Lock;
 static int lfs_lock_dir(lua_State * L)
 {
+#ifdef CORSIXTH_VITA_LFS_NO_LINKS
+  (void) luaL_checkstring(L, 1);
+  return unsupported_link(L, "lfs.lock_dir unsupported on Vita");
+#else
   lfs_Lock *lock;
   size_t pathl;
   char *ln;
@@ -481,6 +503,7 @@ static int lfs_lock_dir(lua_State * L)
   luaL_getmetatable(L, LOCK_METATABLE);
   lua_setmetatable(L, -2);
   return 1;
+#endif
 }
 
 static int lfs_unlock_dir(lua_State * L)
@@ -578,6 +601,13 @@ static int make_link(lua_State * L)
 {
   const char *oldpath = luaL_checkstring(L, 1);
   const char *newpath = luaL_checkstring(L, 2);
+#ifdef CORSIXTH_VITA_LFS_NO_LINKS
+  (void) oldpath;
+  (void) newpath;
+  return unsupported_link(L, lua_toboolean(L, 3)
+      ? "lfs.link symbolic links unsupported on Vita"
+      : "lfs.link hard links unsupported on Vita");
+#else
 #ifndef _WIN32
   return pushresult(L,
                     (lua_toboolean(L, 3) ? symlink : link) (oldpath,
@@ -608,6 +638,7 @@ static int make_link(lua_State * L)
                    : "make_link CreateHardLink() failed");
     return 2;
   }
+#endif
 #endif
 }
 
@@ -1063,6 +1094,7 @@ static int file_info(lua_State * L)
 ** Returns 1 if successful (with the target on top of the stack),
 ** 0 on failure (with stack unchanged, and errno set).
 */
+#ifndef CORSIXTH_VITA_LFS_NO_LINKS
 static int push_link_target(lua_State * L)
 {
   const char *file = luaL_checkstring(L, 1);
@@ -1114,12 +1146,17 @@ static int push_link_target(lua_State * L)
   free(target);
   return ok;
 }
+#endif
 
 /*
 ** Get symbolic link information using lstat.
 */
 static int link_info(lua_State * L)
 {
+#ifdef CORSIXTH_VITA_LFS_NO_LINKS
+  (void) luaL_checkstring(L, 1);
+  return unsupported_link(L, "lfs.symlinkattributes unsupported on Vita");
+#else
   int ret;
   if (lua_isstring(L, 2) && (strcmp(lua_tostring(L, 2), "target") == 0)) {
     int ok = push_link_target(L);
@@ -1133,6 +1170,7 @@ static int link_info(lua_State * L)
     }
   }
   return ret;
+#endif
 }
 
 
@@ -1153,6 +1191,7 @@ static void set_info(lua_State * L)
 }
 
 
+#ifndef CORSIXTH_LFS_HOST_CONTRACT
 static const struct luaL_Reg fslib[] = {
   { "attributes", file_info },
   { "chdir", change_dir },
@@ -1180,3 +1219,4 @@ LFS_EXPORT int luaopen_lfs(lua_State * L)
   set_info(L);
   return 1;
 }
+#endif

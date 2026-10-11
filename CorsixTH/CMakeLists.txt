@@ -121,6 +121,10 @@ set_property(TARGET CorsixTH PROPERTY CXX_EXTENSIONS OFF)
 set_property(TARGET CorsixTH PROPERTY CXX_STANDARD_REQUIRED ON)
 
 ## Finding libraries
+if(VITA)
+  include("${CMAKE_SOURCE_DIR}/vita/cmake/VitaEngine.cmake")
+  corsixth_vita_dependencies(CorsixTH CorsixTH_lib)
+else()
 if(NOT VCPKG_TARGET_TRIPLET)
   find_package(PkgConfig QUIET)
 endif()
@@ -272,6 +276,7 @@ endif()
 # Find libpng
 find_package(PNG REQUIRED)
 target_link_libraries(CorsixTH_lib PRIVATE PNG::PNG)
+endif()
 
 if(WITH_MIDI_DEVICE)
   find_package(RtMidi)
@@ -427,6 +432,10 @@ if(NOT USE_SOURCE_DATADIRS)
 endif()
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT CorsixTH)
+
+if(VITA)
+  corsixth_vita_package(CorsixTH)
+endif()
 
 add_custom_target(windowsconfig ${LUA_PROGRAM_PATH} ${CMAKE_SOURCE_DIR}/scripts/generate_windows_config.lua
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})

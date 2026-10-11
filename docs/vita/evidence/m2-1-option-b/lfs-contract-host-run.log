@@ -1,0 +1,6 @@
+PASS lfs.link hard
+PASS lfs.link symbolic
+PASS lfs.lock_dir
+PASS lfs.symlinkattributes table
+PASS lfs.symlinkattributes target
+lfs_link_contract failures=0

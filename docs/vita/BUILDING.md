@@ -1,6 +1,6 @@
 # Developer environment: native Windows 10, alternative Linux CI
 
-> Status, 2026-10-02: native Windows 10 SDK installation and package inventory **verified**, Issue #3 closed. Full Vita application compilation, link, packaging and hardware functionality remain untested. The official Windows bootstrap initially hung on .tar.bz2 decompression: a checksum-preserving workaround explicitly decompressed the verified archive using Git for Windows bzip2 before listing/extracting the plain TAR. See Issue #3 for original log and recovery details.
+> Status, 2026-10-10: native Windows VitaSDK installation and inventory were verified under Issue #3. The standalone M1A SDL2/GXM and M1B Lua/filesystem diagnostics achieved BUILD PASS and physical Vita FAT DEVICE PASS under Issues [#4](https://github.com/VitaPorts/CorsixTH-Vita/issues/4) and [#5](https://github.com/VitaPorts/CorsixTH-Vita/issues/5). The actual CorsixTH M2.1 engine compiles but is **BLOCKED at ELF link**; it has no SELF/VPK or hardware result. The original Windows bootstrap needed the documented checksum-preserving Git for Windows bzip2 workaround in Issue #3.
 
 ## Director's host: Windows 10 x64, PowerShell 5.1+
 Install Git for Windows (with Git Credential Manager), CMake, Ninja, VS Code + GitHub/Codex extensions as needed, and the official native Windows VitaSDK. Python 3 may be useful for future project scripts but is not an M0 blocker. No WSL2/Linux/Docker is required on the director's PC. Native Linux/Docker may independently be used by cloud CI.
@@ -59,6 +59,16 @@ Director can install a diagnostic VPK via VitaShell and return `ux0:data/corsixt
 
 ## Source/CI distinction
 Director may work entirely in native Windows 10. GitHub-hosted Linux CI is an independent build environment, not a local WSL/Docker requirement. For SDK mismatch, compare compiler target triplet and library/package ABI; do not mix host-built and CI libraries. Complete issue #3 inventory before a full game link is treated as meaningful.
+
+## M2.1 engine build attempt
+
+The Vita-only CMake route, exact Windows configure/build commands, dependency
+inventory, resource plan, full logs, and first link blocker are recorded in
+[M2_1_BUILD_REPORT.md](M2_1_BUILD_REPORT.md). Current status is **BLOCKED** at
+ELF link; no engine VPK exists for installation or hardware testing.
+The [linker investigation](M2_1_LINKER_INVESTIGATION.md) records actual API
+reachability, SDK `libdl` experiments, and a proposed compatibility boundary
+awaiting GPT architecture review.
 
 ### Verified native Windows host, 2026-10-02
 ```powershell

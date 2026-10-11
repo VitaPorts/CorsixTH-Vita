@@ -31,6 +31,7 @@
 cmake_minimum_required(VERSION 3.14)
 
 # Define our options
+option(VITA "Build the native VitaSDK engine and development package" OFF)
 option(BUILD_CORSIXTH "Builds the main game" ON)
 option(WITH_MOVIES "Activate in game movies" ON)
 option(WITH_LUAJIT "Use LuaJIT instead of Lua" OFF)
@@ -44,6 +45,24 @@ option(ENABLE_SANITIZERS "Build with ASan and UBSan enabled" OFF)
 option(WITH_TRACY "Build with Tracy profiling enabled" OFF)
 option(FETCH_SOUNDFONT "Download soundfont asset" OFF)
 option(FETCH_UNICODE_FONT "Download GoNoto Unicode font" OFF)
+
+if(VITA)
+  set(WITH_LUAJIT ON)
+  foreach(disabled_option IN ITEMS WITH_MOVIES WITH_UPDATE_CHECK WITH_MIDI_DEVICE
+      WITH_TRACY FETCH_SOUNDFONT FETCH_UNICODE_FONT ENABLE_UNIT_TESTS
+      BUILD_ANIMVIEW BUILD_TOOLS)
+    if(${disabled_option})
+      message(STATUS "Vita M2.1: disabling ${disabled_option}")
+      set(${disabled_option} OFF)
+    endif()
+  endforeach()
+  if(USE_SOURCE_DATADIRS)
+    message(FATAL_ERROR "Vita packages cannot use source-directory resources")
+  endif()
+  if(VCPKG_TARGET_TRIPLET)
+    message(FATAL_ERROR "The Vita engine must use the pinned VitaSDK, not vcpkg")
+  endif()
+endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 
@@ -130,7 +149,7 @@ else()
   message("Note: Update check is disabled")
 endif()
 
-if(VCPKG_TARGET_TRIPLET AND NOT WITH_LUAROCKS)
+if(VITA OR (VCPKG_TARGET_TRIPLET AND NOT WITH_LUAROCKS))
   set(CORSIX_TH_LINK_LUA_MODULES ON)
 else()
   set(CORSIX_TH_LINK_LUA_MODULES OFF)
@@ -164,4 +183,6 @@ endif()
 message("")
 
 # Documentation generation, construct 'doc' target
-include(GenerateDoc)
+if(NOT VITA)
+  include(GenerateDoc)
+endif()
