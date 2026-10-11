@@ -1,0 +1,10 @@
+[0/2] Re-checking globbed directories...
+[1/10] Building CXX object CorsixTH/CMakeFiles/CorsixTH.dir/SrcUnshared/main.cpp.obj
+[2/10] Building CXX object CorsixTH/CMakeFiles/CorsixTH.dir/Src/main.cpp.obj
+[3/10] Linking CXX executable CorsixTH\CorsixTH
+[4/10] Converting to Sony ELF CorsixTH.velf
+[5/10] Creating SELF eboot.bin
+[6/10] C:\Windows\system32\cmd.exe /C "cd /D C:\CorsixTH-Vita\CorsixTH-Vita\build-vita-engine\CorsixTH && "C:\Program Files\CMake\bin\cmake.exe" -E copy C:/CorsixTH-Vita/CorsixTH-Vita/build-vita-engine/CorsixTH/eboot.bin.out eboot.bin"
+[7/10] Generating param.sfo for corsixth_vita_engine.vpk
+[8/10] Building vpk corsixth_vita_engine.vpk
+[9/10] C:\Windows\system32\cmd.exe /C "cd /D C:\CorsixTH-Vita\CorsixTH-Vita\build-vita-engine\CorsixTH && "C:\Program Files\CMake\bin\cmake.exe" -E copy C:/CorsixTH-Vita/CorsixTH-Vita/build-vita-engine/CorsixTH/corsixth_vita_engine.vpk.out corsixth_vita_engine.vpk"

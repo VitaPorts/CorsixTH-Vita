@@ -1,0 +1,20 @@
+Note: FFmpeg video is disabled
+Note: Update check is disabled
+
+Building common libraries
+Building CorsixTH
+CMake Error at CorsixTH/CMakeLists.txt:401 (install):
+  install DIRECTORY given no DESTINATION!
+
+
+CMake Error at CorsixTH/CMakeLists.txt:402 (install):
+  install DIRECTORY given no DESTINATION!
+
+
+CMake Error at CorsixTH/CMakeLists.txt:405 (install):
+  install FILES given no DESTINATION!
+
+
+-- Vita VPK: CORSXP003, 357 CorsixTH resources
+
+-- Configuring incomplete, errors occurred!

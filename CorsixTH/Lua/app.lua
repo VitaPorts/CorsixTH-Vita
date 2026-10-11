@@ -1152,7 +1152,7 @@ function App:fixConfig()
     elseif key == "player_name" then
       value = value:match('^%s*(.*%S)') or "" -- Trim spaces
       if value:len() == 0 then -- If empty, use computer user's name,
-        value = os.getenv("USER") or os.getenv("USERNAME")
+        value = os.getenv("USER") or os.getenv("USERNAME") or ""
       end
       value = value:match('^%s*(.*%S)') or ""
       if value:len() == 0 then -- unless that is also empty
