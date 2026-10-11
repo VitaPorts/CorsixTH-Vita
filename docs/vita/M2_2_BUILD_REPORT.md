@@ -1,6 +1,7 @@
 # M2.2 Vita startup, filesystem and logging — Issue #7
 
-Status: **BUILD PASS / DEVICE NOT RUN**. Branch `codex/m2-startup-filesystem`
+Status: **LOCAL BUILD PASS / BUILD GATE PENDING GPT REVIEW / DEVICE NOT RUN**.
+Branch `codex/m2-startup-filesystem`
 starts from accepted M2.1 merge `fb48daadcac92effdc55f4c71c83631fa931fc30`;
 official CorsixTH baseline remains v0.70.1
 (`56bd5d00f76331c7f76d7b696726a7926303ca0c`). The VPK has not been
@@ -107,6 +108,7 @@ SELF=PASS
 VPK=PASS
 VPK_MANIFEST=PASS_361_ENTRIES
 CONFIG_REDIRECT_PACKAGE=PASS
+BUILD_GATE=PENDING_GPT_ARTIFACT_REVIEW
 DEVICE_DIRECTORY_CREATION=NOT_RUN
 DEVICE_RESOURCE_DISCOVERY=NOT_RUN
 DEVICE_BOOT_LOG=NOT_RUN
